@@ -1,28 +1,17 @@
 
-// eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+import Home from './Home'
+import Create from './Create'
+import Update from './Update'
+import { Routes, Route } from "react-router-dom";
 function App() {
-    const [data, setData] = useState([])
-    useEffect(()=> {
-         fetch('http://localhost:8081/')
-        .then(res => res.json())
-        .then(data => setData(data))
-        .catch(err => console.log(err));
-    }, [])
+
   return (
 <>
-
-<div>
-   {data.map(d =>(
-    <>
-    <p>{d.ID}</p>
-    <p>{d.Name}</p>
-    <p>{d.Email}</p>
-    </>
-    
-   ))}
-</div>
+<Routes>
+          <Route path="/" element={<Home/>} />
+          <Route path="/create" element={<Create/>} />
+          <Route path="/update/:ID" element={<Update/>} />
+</Routes>
 </>
   )
 }
