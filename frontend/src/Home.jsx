@@ -7,17 +7,30 @@ import { Button } from 'bootstrap';
 
 
 function App() {
+  //pega os dados do banco
     const [data, setData] = useState([])
+
+    //comando "Insert" na variavel
     useEffect(()=> {
+      //local do server
          axios.get('http://localhost:8081/')
+         //metodo set do banco
         .then(res => setData(res.data))
+        //enviando para o console
         .catch(err => console.log(err));
     })
-
+    //useNavigate serve para depois do submit ser redirecionado a algum local
     const navigate = useNavigate();
+
+
+    //--------------------------função "Delete"-------------------------------
+    //classe ativada quando o botão é clicado
     const handleDelete = (ID) => {
+      //local do server com o metodo delete
       axios.delete('http://localhost:8081/delete/'+ID)
+      //mantendo no mesmo local
       .then(res => navigate('/'))
+      //mostrando dados de erro no console 
       .catch(err => console.log(err))
     }
   return (
@@ -35,8 +48,13 @@ function App() {
             </thead>
 
             <tbody>
+              
                 {data.map( (d ,i) => (
+                  //.map para pegar dados do banco e transformar em uma variavel
+
+                  //{d.Name} pega todos os Name do banco, a mesma coisa para o Email
                   <tr>
+                    
                     <td>{d.Name}</td>
                     <td>{d.Email}</td>
                     

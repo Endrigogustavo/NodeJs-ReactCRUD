@@ -1,21 +1,34 @@
+//Importações 
 import axios from "axios";
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 
 function Update() {
 
+  //adicionando dados do form para uma variavel
     const [Name, setName] = useState('')
     const [Email, setEmail] = useState('')
+
+    //useNavigate serve para depois do submit ser redirecionado a algum local
     const navigate = useNavigate();
 
+    //pegando o ID pelo node e enviando como parametro
     const {ID} = useParams()
 
+    //classe ativada quando o botão é clicado
     const handleSubmit = (event) =>{
         event.preventDefault();
+
+        //rota do nodejs
+        //metodo put para fazer o update e envia as classes para o upadte
         axios.put('http://localhost:8081/update/'+ID, {Name,Email})
         .then(res =>{
+          alert("Sucesso")
+          //retorna para o home 
             navigate('/')
-        }).catch(err => console.log(err));
+        })
+        //envia dos dados para o console
+        .catch(err => console.log(err));
     }
   return (
 <>
