@@ -26,6 +26,8 @@ SET time_zone = "+00:00";
 --
 -- Estrutura para tabela `student`
 --
+CREATE DATABASE `crud`;
+USE `crud`;
 
 CREATE TABLE `student` (
   `ID` int(11) NOT NULL,

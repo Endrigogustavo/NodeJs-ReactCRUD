@@ -69,6 +69,29 @@ app.delete('/delete/:ID', (req, res) =>{
     })
 })
 
+app.post('/login', (req, res)=>{
+    const Email = req.body.Email
+    const Nome = req.body.Name
+
+    console.log(Nome)
+    console.log(Email)
+    db.query("SELECT * FROM student WHERE `Name` = ?", 
+    [Nome], (req, result) =>{
+        console.log(result)
+        if(result.length > 0){
+            if(result[0].Email == Email){
+                console.log('Logado com sucesso')
+            }
+            else{
+                console.log('Email errado')
+            } 
+        }
+        else{
+            console.log('Email ou senha incorreto')
+        }
+    })
+})
+
 app.listen(8081, ()=> {
     console.log("Sucesso");
 })
