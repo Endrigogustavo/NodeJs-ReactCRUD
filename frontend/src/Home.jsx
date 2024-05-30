@@ -13,7 +13,7 @@ function App() {
     //comando "Insert" na variavel
     useEffect(()=> {
       //local do server
-         axios.get('http://localhost:8081/')
+         axios.get('http://localhost:8081/home')
          //metodo set do banco
         .then(res => setData(res.data))
         //enviando para o console

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 05/12/2023 às 13:13
--- Versão do servidor: 10.4.28-MariaDB
--- Versão do PHP: 8.2.4
+-- Tempo de geração: 30/05/2024 às 14:51
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,22 +26,21 @@ SET time_zone = "+00:00";
 --
 -- Estrutura para tabela `student`
 --
-CREATE DATABASE `crud`;
-USE `crud`;
 
 CREATE TABLE `student` (
   `ID` int(11) NOT NULL,
-  `Name` varchar(50) NOT NULL,
-  `Email` varchar(50) NOT NULL
+  `Name` varchar(60) NOT NULL,
+  `Email` varchar(60) NOT NULL,
+  `Senha` varchar(100) NOT NULL,
+  `Token` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `student`
 --
 
-INSERT INTO `student` (`ID`, `Name`, `Email`) VALUES
-(1, 'Endrigo', 'TesteNodeReact@gmail.com'),
-(2, 'Endrigo', 'TesteNodeReact@gmail.com');
+INSERT INTO `student` (`ID`, `Name`, `Email`, `Senha`, `Token`) VALUES
+(1, 'Endrigo', 'endrigoteste@ete', '$2b$10$XT23/nBjtPZG/LLZ8S2qGuhpheNxa7K9yErbmT26olvL8IN/3Ie86', '');
 
 --
 -- Índices para tabelas despejadas
@@ -61,7 +60,7 @@ ALTER TABLE `student`
 -- AUTO_INCREMENT de tabela `student`
 --
 ALTER TABLE `student`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -6,10 +6,11 @@ function Create() {
 
     const [Name, setName] = useState('')
     const [Email, setEmail] = useState('')
+    const [Senha, setSenha] = useState('')
     const navigate = useNavigate();
     const handleSubmit = (event) =>{
         event.preventDefault();
-        axios.post('http://localhost:8081/create', {Name,Email})
+        axios.post('http://localhost:8081/create', {Name,Email,Senha})
         .then(res =>{
             navigate('/')
         }).catch(err => console.log(err));
@@ -29,6 +30,11 @@ function Create() {
     <label  className="form-label">Email</label>
     <input type="email" className="form-control" id="exampleInputPassword1"
     onChange={e => setEmail(e.target.value)}/>
+  </div>
+  <div className="mb-3">
+    <label  className="form-label">Senha</label>
+    <input type="password" className="form-control" id="exampleInputPassword1"
+    onChange={e => setSenha(e.target.value)}/>
   </div>
 
   <button type="submit" className="btn btn-primary">Submit</button>

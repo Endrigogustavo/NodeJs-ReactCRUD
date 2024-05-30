@@ -19,9 +19,15 @@ function Login() {
 
         //rota do nodejs
         //metodo put para fazer o update e envia as classes para o upadte
-        axios.post('http://localhost:8081/login', {Name,Email})
+        axios.post('http://localhost:8081/', {Name,Email})
         .then(res =>{
             console.log(res)
+            if (res.data.result === "Sucesso") {
+              alert("Logado com sucesso");
+              navigate('/home');
+            } else {
+              alert("Erro ao Logar");
+            }
         })
         //envia dos dados para o console
         .catch(err => console.log(err));
