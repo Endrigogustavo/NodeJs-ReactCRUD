@@ -3,6 +3,7 @@ import mysql from 'mysql';
 import cors from 'cors';
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken'
+import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt';
 const salt = 10
 
@@ -11,10 +12,16 @@ dotenv.config({path: './.env'})
 
 //importando dados das bibliotecas
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:5173"],
+    credentials: true
+}));
 
 //pegando o banco e transformando em um json
 app.use(express.json())
+
+app.use(cookieParser())
+
 
 //conectando no banco
 const db = mysql.createConnection({
@@ -32,8 +39,26 @@ db.connect((error) =>{
     }
 })
 
+const verifyUser = (req, res, next) =>{
+    const token = req.cookie.token;
+    if(!token){
+        return res.json({Error: "Não Autenticado"})
+    } else{
+        jwt.verify(token, "jwt-secret-key", (err, decoded) =>{
+            if(err){
+                return res.json({Error: "Token com problema"})
+            } else{
+                req.name = decoded.name;
+                next();
+            }
+        })
+    }
+}
+app.get('/', verifyUser, (req, res) =>{
+    return res.json({Status: "Sucesso", name: req.name})
+})
 //Home com o metodo select para listar itens
-app.get('/home' , (req,res)=> {
+app.get('/list' , (req,res)=> {
     //variavel sql
     const sql = "SELECT * FROM student";
     //execultando a variavel sql
@@ -93,36 +118,36 @@ app.delete('/delete/:ID', (req, res) =>{
     })
 })
 
-app.post('/', (req, res)=>{
+app.post('/login', (req, res)=>{
     const Email = req.body.Email
     const Senha = req.body.Senha
-    const Nome = req.body.Name
-    
 
-    db.query("SELECT * FROM student WHERE `Name` = ?", 
-    [Nome], (req, result) =>{
+    db.query("SELECT * FROM student WHERE `Email` = ?", 
+    [Email], (err, result) =>{
         console.log(result)
         if(result.length > 0){
-            console.log(result)
-                
-                if(result[0].Email == Email){
-                    console.log('Logado com sucesso')
-                    res.json({ result: 'Sucesso' });
-                }
-                else{
-                    console.log('Email errado')
-                } 
+            bcrypt.compare(req.body.Senha.toString(), result[0].Senha, (err, response) =>{
+                console.log(result)
+                if(err) return res.json({Error: "Erro no servidor"})
+
+                    if(response){
+                        const name = result[0].Name
+                        const token = jwt.sign({name}, "jwt-secret-key", {expiresIn: `1D`});
+                        res.cookie('token', token, { httpOnly: true, secure: false });
+                        res.json({ result: 'Sucesso' });
+                        console.log("Logado com sucesso")
+                    }
+                    else{
+                        res.json({ result: 'Sucesso' });
+                    }
+            })  
+            } else{
+                return res.json({Status: "Email não exise"})
             }
-            else{
-                console.log('Email ou senha incorreto')
-            }
-            
-           }
-       
-    )
+        })
 })
 
-//bcrypt.compare(req.body.Senha.toString, result[0].SenhaForm, (err, response)
+//
 
 app.listen(8081, ()=> {
     console.log("Sucesso");

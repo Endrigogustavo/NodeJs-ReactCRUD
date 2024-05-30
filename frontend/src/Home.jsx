@@ -1,80 +1,51 @@
-
 // eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from 'bootstrap';
 
+function Home() {
+  const [auth, setAuth] = useState(false);
+  const [message, setMessage] = useState('');
+  const [name, setName] = useState('');
 
-function App() {
-  //pega os dados do banco
-    const [data, setData] = useState([])
+  axios.defaults.withCredentials = true;
 
-    //comando "Insert" na variavel
-    useEffect(()=> {
-      //local do server
-         axios.get('http://localhost:8081/home')
-         //metodo set do banco
-        .then(res => setData(res.data))
-        //enviando para o console
-        .catch(err => console.log(err));
-    })
-    //useNavigate serve para depois do submit ser redirecionado a algum local
-    const navigate = useNavigate();
+  useEffect(() => {
+    axios.get('http://localhost:8081/')
+      .then(res => {
+        if (res.data.Status === "Sucesso") {
+          setAuth(true);
+          setName(res.data.name);
+        } else {
+          setAuth(false);
+          setMessage(res.data.Error);
+        }
+      })
+      .catch(err => {
+        console.error("Erro na requisição:", err);
+        setAuth(false);
+        setMessage("Erro ao conectar ao servidor");
+      });
+  }, []);
 
-
-    //--------------------------função "Delete"-------------------------------
-    //classe ativada quando o botão é clicado
-    const handleDelete = (ID) => {
-      //local do server com o metodo delete
-      axios.delete('http://localhost:8081/delete/'+ID)
-      //mantendo no mesmo local
-      .then(res => navigate('/'))
-      //mostrando dados de erro no console 
-      .catch(err => console.log(err))
-    }
   return (
-<>
- <div className='d-flex justify-content-center align-items-center bg-dark vh-100'>
-      <div className="bg-white rounded w-50 p-3">
-         <h2>Crud</h2>
-          <Link to="/create" className='btn btn-success'>Add +</Link>
-         <table className="table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              
-                {data.map( (d ,i) => (
-                  //.map para pegar dados do banco e transformar em uma variavel
-
-                  //{d.Name} pega todos os Name do banco, a mesma coisa para o Email
-                  <tr>
-                    
-                    <td>{d.Name}</td>
-                    <td>{d.Email}</td>
-                    
-                    <td>
-                        <Link to={`/update/${d.ID}`}  className='btn btn-sm btn-primary'>Update</Link>
-                        <button onClick={e => handleDelete(d.ID)} className='btn btn-sm btn-danger'>Delete</button>
-                    </td>
-                  </tr>
-
-
-
-                ))}
-            </tbody>
-         </table>
+    <>
+      <div className="container mt-4">
+        {
+          auth ?
+            <div>
+              <h3>Você é autorizado {name}</h3>
+              <button className="btn btn-danger">Logout</button>
+            </div>
+            :
+            <div>
+              <h3>{message}</h3>
+              <Link to="/login" className='btn btn-primary'>Login</Link>
+            </div>
+        }
       </div>
- </div>
-
-</>
-  )
+    </>
+  );
 }
 
-export default App
-
+export default Home;
